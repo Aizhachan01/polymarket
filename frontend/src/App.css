@@ -87,41 +87,50 @@ nav a:hover {
   background: #dc2626;
 }
 
-.login-form {
+.auth-links {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   align-items: center;
 }
 
-.login-input {
-  padding: 8px 12px;
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
-  font-size: 14px;
-  width: 200px;
-  background: white;
-}
-
-.login-input:focus {
-  outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-.login-btn {
-  background: #3b82f6;
-  color: white;
-  border: none;
+.signin-link,
+.signup-link {
   padding: 8px 18px;
   border-radius: 6px;
-  cursor: pointer;
   font-size: 14px;
   font-weight: 500;
-  transition: background 0.2s;
+  text-decoration: none;
+  transition: all 0.2s;
 }
 
-.login-btn:hover {
+.signin-link {
+  color: #475569;
+  border: 1px solid #cbd5e1;
+}
+
+.signin-link:hover {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+
+.signup-link {
+  background: #3b82f6;
+  color: white;
+}
+
+.signup-link:hover {
   background: #2563eb;
+}
+
+.profile-link {
+  color: #1e293b;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.profile-link:hover {
+  color: #3b82f6;
 }
 
 /* Main Content */
@@ -367,6 +376,13 @@ nav a:hover {
   font-size: 14px;
   color: #10b981;
   font-weight: 600;
+}
+
+.pool-bettors {
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 6px;
+  font-weight: 500;
 }
 
 /* Bet Form */
@@ -726,6 +742,266 @@ nav a:hover {
   margin-bottom: 20px;
 }
 
+/* Auth Pages */
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 200px);
+  padding: 40px 20px;
+}
+
+.auth-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 40px;
+  width: 100%;
+  max-width: 450px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.auth-card h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.auth-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.btn-primary {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  transition: background 0.2s;
+  width: 100%;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #2563eb;
+}
+
+.btn-primary:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+.error-message {
+  background: #fee2e2;
+  border: 1px solid #fca5a5;
+  color: #991b1b;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.auth-link {
+  text-align: center;
+  margin-top: 24px;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.auth-link a {
+  color: #3b82f6;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.auth-link a:hover {
+  text-decoration: underline;
+}
+
+/* Profile Page */
+.profile-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.profile-header {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 32px;
+  margin-bottom: 32px;
+}
+
+.profile-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 24px;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.info-item {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  font-size: 15px;
+}
+
+.info-item .label {
+  font-weight: 600;
+  color: #64748b;
+  min-width: 80px;
+}
+
+.balance-amount {
+  color: #10b981;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.role-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.role-badge.user {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.role-badge.admin {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.stats-section {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 32px;
+  margin-bottom: 32px;
+}
+
+.stats-section h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 24px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px;
+}
+
+.stat-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 8px;
+}
+
+.stat-label {
+  font-size: 13px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.bets-section {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 32px;
+}
+
+.bets-section h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 24px;
+}
+
+.bet-item {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.bet-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.bet-market {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+  text-decoration: none;
+}
+
+.bet-market:hover {
+  color: #3b82f6;
+}
+
+.bet-details {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  align-items: center;
+  font-size: 14px;
+  color: #64748b;
+}
+
+.status-won {
+  color: #10b981;
+  font-weight: 600;
+}
+
+.status-lost {
+  color: #ef4444;
+  font-weight: 600;
+}
+
+.status-pending {
+  color: #f59e0b;
+  font-weight: 600;
+}
+
+.bet-date {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .header-content {
@@ -752,5 +1028,18 @@ nav a:hover {
   .resolve-btn, .view-btn {
     width: 100%;
     text-align: center;
+  }
+
+  .auth-card {
+    padding: 24px;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .bet-header {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }

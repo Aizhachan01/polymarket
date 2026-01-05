@@ -30,13 +30,20 @@ export async function placeBet(userId, marketId, side, amount) {
   }
 
   // Check if user already has a bet on this side
-  const { data: existingBet } = await supabase
+  const { data: existingBets, error: checkError } = await supabase
     .from("bets")
     .select("*")
     .eq("user_id", userId)
     .eq("market_id", marketId)
     .eq("side", side)
-    .single();
+    .limit(1);
+
+  // If error and it's not "no rows found", throw error
+  if (checkError && checkError.code !== "PGRST116") {
+    throw new AppError(`Database error: ${checkError.message}`, 500);
+  }
+
+  const existingBet = existingBets && existingBets.length > 0 ? existingBets[0] : null;
 
   let betData;
 
@@ -44,20 +51,25 @@ export async function placeBet(userId, marketId, side, amount) {
     // Update existing bet (add to existing amount)
     const newAmount = parseFloat(existingBet.amount) + parseFloat(amount);
 
-    const { data, error } = await supabase
+    const { data: updatedBets, error } = await supabase
       .from("bets")
       .update({ amount: newAmount })
       .eq("id", existingBet.id)
       .select()
-      .single();
+      .limit(1);
 
     if (error) {
       throw new AppError(`Database error: ${error.message}`, 500);
     }
-    betData = data;
+
+    if (!updatedBets || updatedBets.length === 0) {
+      throw new AppError("Failed to update bet", 500);
+    }
+
+    betData = updatedBets[0];
   } else {
     // Create new bet
-    const { data, error } = await supabase
+    const { data: newBets, error } = await supabase
       .from("bets")
       .insert([
         {
@@ -68,12 +80,17 @@ export async function placeBet(userId, marketId, side, amount) {
         },
       ])
       .select()
-      .single();
+      .limit(1);
 
     if (error) {
       throw new AppError(`Database error: ${error.message}`, 500);
     }
-    betData = data;
+
+    if (!newBets || newBets.length === 0) {
+      throw new AppError("Failed to create bet", 500);
+    }
+
+    betData = newBets[0];
   }
 
   // Deduct points from user balance
@@ -87,14 +104,10 @@ export async function placeBet(userId, marketId, side, amount) {
  * Get bets for a user
  */
 export async function getUserBets(userId, filters = {}) {
+  // First get bets
   let query = supabase
     .from("bets")
-    .select(
-      `
-      *,
-      market:markets(*)
-    `
-    )
+    .select("*")
     .eq("user_id", userId)
     .order("created_at", { ascending: false });
 
@@ -102,13 +115,50 @@ export async function getUserBets(userId, filters = {}) {
     query = query.eq("market_id", filters.market_id);
   }
 
-  const { data, error } = await query;
+  const { data: bets, error: betsError } = await query;
 
-  if (error) {
-    throw new AppError(`Database error: ${error.message}`, 500);
+  if (betsError) {
+    // If no bets found, return empty array instead of error
+    if (betsError.code === "PGRST116" || betsError.message.includes("No rows")) {
+      return [];
+    }
+    throw new AppError(`Database error: ${betsError.message}`, 500);
   }
 
-  return data;
+  if (!bets || bets.length === 0) {
+    return [];
+  }
+
+  // Get unique market IDs
+  const marketIds = [...new Set(bets.map(bet => bet.market_id))];
+
+  // Get markets separately
+  const { data: markets, error: marketsError } = await supabase
+    .from("markets")
+    .select("id, title, description, status, resolution, created_at, resolved_at")
+    .in("id", marketIds);
+
+  if (marketsError) {
+    console.error("Error fetching markets:", marketsError.message);
+    // Return bets without market details if markets query fails
+    return bets.map(bet => ({ ...bet, market: null }));
+  }
+
+  // Create a map of markets by ID
+  const marketMap = {};
+  if (markets) {
+    markets.forEach(market => {
+      marketMap[market.id] = market;
+    });
+  }
+
+  // Combine bets with market details
+  const betsWithMarkets = bets.map(bet => ({
+    ...bet,
+    market: marketMap[bet.market_id] || null,
+  }));
+
+  return betsWithMarkets;
 }
 
 /**
@@ -139,7 +189,7 @@ export async function getMarketBets(marketId) {
 export async function getMarketPools(marketId) {
   const { data: yesBets, error: yesError } = await supabase
     .from("bets")
-    .select("amount")
+    .select("amount, user_id")
     .eq("market_id", marketId)
     .eq("side", "YES");
 
@@ -149,7 +199,7 @@ export async function getMarketPools(marketId) {
 
   const { data: noBets, error: noError } = await supabase
     .from("bets")
-    .select("amount")
+    .select("amount, user_id")
     .eq("market_id", marketId)
     .eq("side", "NO");
 
@@ -159,10 +209,24 @@ export async function getMarketPools(marketId) {
 
   const yesPool = yesBets.reduce((sum, bet) => sum + parseFloat(bet.amount), 0);
   const noPool = noBets.reduce((sum, bet) => sum + parseFloat(bet.amount), 0);
+  
+  // Get unique bettor counts
+  const yesBettors = new Set(yesBets.map(bet => bet.user_id)).size;
+  const noBettors = new Set(noBets.map(bet => bet.user_id)).size;
+  const totalBettors = new Set([...yesBets.map(bet => bet.user_id), ...noBets.map(bet => bet.user_id)]).size;
+
+  const total = yesPool + noPool;
+  const yesPercentage = total > 0 ? (yesPool / total) * 100 : 0;
+  const noPercentage = total > 0 ? (noPool / total) * 100 : 0;
 
   return {
     yes: yesPool,
     no: noPool,
-    total: yesPool + noPool,
+    total: total,
+    yesBettors,
+    noBettors,
+    totalBettors,
+    yesPercentage: parseFloat(yesPercentage.toFixed(2)),
+    noPercentage: parseFloat(noPercentage.toFixed(2)),
   };
 }

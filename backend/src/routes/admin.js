@@ -5,6 +5,7 @@ import {
   createMarketHandler,
   addPointsHandler,
   resolveMarketHandler,
+  makeAdminHandler,
 } from "../controllers/adminController.js";
 
 const router = express.Router();
@@ -18,6 +19,9 @@ router.post("/markets", createMarketHandler);
 
 // Add points to a user
 router.post("/users/add-points", addPointsHandler);
+
+// Make a user an admin (only existing admins can do this)
+router.post("/users/make-admin", makeAdminHandler);
 
 // Resolve a market and distribute winnings
 router.post("/markets/:id/resolve", resolveMarketHandler);

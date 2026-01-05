@@ -108,3 +108,35 @@ export async function addPointsToUser(userId, amount) {
 
   return await updateUserBalance(userId, newBalance);
 }
+
+/**
+ * Update user role
+ */
+export async function updateUserRole(userId, newRole) {
+  if (!["user", "admin"].includes(newRole)) {
+    throw new AppError("Role must be 'user' or 'admin'", 400);
+  }
+
+  // Check if user exists
+  await getUserById(userId);
+
+  const { data, error } = await supabase
+    .from("users")
+    .update({
+      role: newRole,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", userId)
+    .select()
+    .single();
+
+  if (error) {
+    throw new AppError(`Database error: ${error.message}`, 500);
+  }
+
+  if (!data) {
+    throw new AppError("User not found", 404);
+  }
+
+  return data;
+}

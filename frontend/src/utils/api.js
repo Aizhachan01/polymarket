@@ -1,25 +1,44 @@
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
 
-// Get user ID from localStorage
+// Get token from localStorage
+export const getToken = () => {
+  return localStorage.getItem('token');
+};
+
+// Set token in localStorage
+export const setToken = (token) => {
+  localStorage.setItem('token', token);
+};
+
+// Remove token from localStorage
+export const removeToken = () => {
+  localStorage.removeItem('token');
+};
+
+// Get user ID from localStorage (for backward compatibility)
 export const getUserId = () => {
   return localStorage.getItem('userId');
 };
 
-// Set user ID in localStorage
+// Set user ID in localStorage (for backward compatibility)
 export const setUserId = (userId) => {
   localStorage.setItem('userId', userId);
 };
 
 // API request helper
 const request = async (endpoint, options = {}) => {
-  const userId = getUserId();
+  const token = getToken();
+  const userId = getUserId(); // Fallback for backward compatibility
   const headers = {
     'Content-Type': 'application/json',
     ...options.headers,
   };
 
-  // Add user ID header if available
-  if (userId) {
+  // Add Authorization header if token available (preferred)
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  } else if (userId) {
+    // Fallback to x-user-id header for backward compatibility
     headers['x-user-id'] = userId;
   }
 
@@ -64,6 +83,20 @@ export const usersApi = {
     const query = marketId ? `?market_id=${marketId}` : '';
     return request(`/users/${userId}/bets${query}`);
   },
+};
+
+// Auth API
+export const authApi = {
+  signup: (email, username, password) =>
+    request('/auth/signup', {
+      method: 'POST',
+      body: JSON.stringify({ email, username, password }),
+    }),
+  signin: (email, password) =>
+    request('/auth/signin', {
+      method: 'POST',
+      body: JSON.stringify({ email, password }),
+    }),
 };
 
 // Admin API

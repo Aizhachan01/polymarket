@@ -1,18 +1,28 @@
 import { getUserById } from "../services/userService.js";
+import { verifyToken } from "../services/authService.js";
 import { AppError } from "../utils/errors.js";
 
 /**
- * Simple authentication middleware
- * In a real app, you'd verify JWT tokens or sessions
- * For now, expects userId in request header: x-user-id
+ * Authentication middleware
+ * Supports both JWT token (Authorization header) and x-user-id header (for backward compatibility)
  */
 export async function authenticate(req, res, next) {
   try {
-    const userId = req.headers["x-user-id"];
+    let userId = null;
+
+    // Try JWT token first (Bearer token)
+    const authHeader = req.headers.authorization;
+    if (authHeader && authHeader.startsWith("Bearer ")) {
+      const token = authHeader.substring(7);
+      userId = verifyToken(token);
+    } else {
+      // Fallback to x-user-id header (for backward compatibility)
+      userId = req.headers["x-user-id"];
+    }
 
     if (!userId) {
       throw new AppError(
-        "Authentication required. Please provide x-user-id header",
+        "Authentication required. Please provide Authorization header (Bearer token) or x-user-id header",
         401
       );
     }

@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { errorHandler } from "./utils/errors.js";
+import authRoutes from "./routes/auth.js";
 import usersRoutes from "./routes/users.js";
 import marketsRoutes from "./routes/markets.js";
 import betsRoutes from "./routes/bets.js";
@@ -19,6 +20,7 @@ app.get("/health", (req, res) => {
 });
 
 // API Routes
+app.use("/api/auth", authRoutes);
 app.use("/api/users", usersRoutes);
 app.use("/api/markets", marketsRoutes);
 app.use("/api/bets", betsRoutes);

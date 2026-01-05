@@ -75,9 +75,18 @@ function MarketDetail({ user, onUpdate }) {
   if (error) return <div className="error">Error: {error}</div>;
   if (!market) return <div className="error">Market not found</div>;
 
-  const pools = market.pools || { yes: 0, no: 0, total: 0 };
-  const yesPercentage = pools.total > 0 ? (pools.yes / pools.total) * 100 : 0;
-  const noPercentage = pools.total > 0 ? (pools.no / pools.total) * 100 : 0;
+  const pools = market.pools || { 
+    yes: 0, 
+    no: 0, 
+    total: 0, 
+    yesBettors: 0, 
+    noBettors: 0, 
+    totalBettors: 0,
+    yesPercentage: 0,
+    noPercentage: 0
+  };
+  const yesPercentage = pools.yesPercentage || (pools.total > 0 ? (pools.yes / pools.total) * 100 : 0);
+  const noPercentage = pools.noPercentage || (pools.total > 0 ? (pools.no / pools.total) * 100 : 0);
 
   return (
     <div>
@@ -99,15 +108,18 @@ function MarketDetail({ user, onUpdate }) {
               <div className="pool-label">YES</div>
               <div className="pool-amount">{parseFloat(pools.yes).toFixed(2)} points</div>
               <div className="pool-percentage">{yesPercentage.toFixed(1)}%</div>
+              <div className="pool-bettors">{pools.yesBettors || 0} bettors</div>
             </div>
             <div className="pool-card">
               <div className="pool-label">NO</div>
               <div className="pool-amount">{parseFloat(pools.no).toFixed(2)} points</div>
               <div className="pool-percentage">{noPercentage.toFixed(1)}%</div>
+              <div className="pool-bettors">{pools.noBettors || 0} bettors</div>
             </div>
             <div className="pool-card">
               <div className="pool-label">Total</div>
               <div className="pool-amount">{parseFloat(pools.total).toFixed(2)} points</div>
+              <div className="pool-bettors">{pools.totalBettors || 0} total bettors</div>
             </div>
           </div>
         </div>
