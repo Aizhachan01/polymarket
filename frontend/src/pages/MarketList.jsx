@@ -26,57 +26,54 @@ function MarketList() {
     }
   };
 
-  if (loading) return <div>Loading markets...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading) return <div className="loading">Loading markets...</div>;
+  if (error) return <div className="error">Error: {error}</div>;
 
   return (
     <div>
-      <h1>Markets</h1>
-      <div style={{ marginBottom: '20px' }}>
+      <h1 className="page-title">Markets</h1>
+      <div className="filter-buttons">
         <button
           onClick={() => setFilter('all')}
-          style={{ marginRight: '10px', fontWeight: filter === 'all' ? 'bold' : 'normal' }}
+          className={`filter-btn ${filter === 'all' ? 'active' : ''}`}
         >
           All
         </button>
         <button
           onClick={() => setFilter('open')}
-          style={{ marginRight: '10px', fontWeight: filter === 'open' ? 'bold' : 'normal' }}
+          className={`filter-btn ${filter === 'open' ? 'active' : ''}`}
         >
           Open
         </button>
         <button
           onClick={() => setFilter('resolved')}
-          style={{ fontWeight: filter === 'resolved' ? 'bold' : 'normal' }}
+          className={`filter-btn ${filter === 'resolved' ? 'active' : ''}`}
         >
           Resolved
         </button>
       </div>
-      <div>
+      <div className="markets-list">
         {markets.length === 0 ? (
-          <div>No markets found</div>
+          <div className="empty-state">No markets found</div>
         ) : (
           markets.map((market) => (
-            <div
-              key={market.id}
-              style={{
-                border: '1px solid #ccc',
-                padding: '15px',
-                marginBottom: '15px',
-                borderRadius: '5px',
-              }}
-            >
-              <Link
-                to={`/markets/${market.id}`}
-                style={{ textDecoration: 'none', color: 'inherit' }}
-              >
-                <h2 style={{ margin: '0 0 10px 0' }}>{market.title}</h2>
-              </Link>
-              {market.description && <p style={{ margin: '0 0 10px 0' }}>{market.description}</p>}
-              <div style={{ display: 'flex', gap: '20px', fontSize: '14px', color: '#666' }}>
-                <span>Status: {market.status}</span>
-                {market.resolution && <span>Resolution: {market.resolution}</span>}
-                <span>Created: {new Date(market.created_at).toLocaleDateString()}</span>
+            <div key={market.id} className="market-card">
+              <h2 className="market-card-title">
+                <Link to={`/markets/${market.id}`}>{market.title}</Link>
+              </h2>
+              {market.description && (
+                <p className="market-card-description">{market.description}</p>
+              )}
+              <div className="market-card-meta">
+                <span className="meta-item">
+                  <span className={`status-badge ${market.status}`}>{market.status}</span>
+                </span>
+                {market.resolution && (
+                  <span className="meta-item">
+                    <span className="resolution-badge">Resolution: {market.resolution}</span>
+                  </span>
+                )}
+                <span className="meta-item">Created: {new Date(market.created_at).toLocaleDateString()}</span>
               </div>
             </div>
           ))
@@ -87,4 +84,3 @@ function MarketList() {
 }
 
 export default MarketList;
-

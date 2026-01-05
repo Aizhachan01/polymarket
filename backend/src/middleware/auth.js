@@ -1,5 +1,5 @@
-import { getUserById } from '../services/userService.js';
-import { AppError } from '../utils/errors.js';
+import { getUserById } from "../services/userService.js";
+import { AppError } from "../utils/errors.js";
 
 /**
  * Simple authentication middleware
@@ -8,10 +8,13 @@ import { AppError } from '../utils/errors.js';
  */
 export async function authenticate(req, res, next) {
   try {
-    const userId = req.headers['x-user-id'];
+    const userId = req.headers["x-user-id"];
 
     if (!userId) {
-      throw new AppError('Authentication required. Please provide x-user-id header', 401);
+      throw new AppError(
+        "Authentication required. Please provide x-user-id header",
+        401
+      );
     }
 
     // Verify user exists
@@ -22,4 +25,3 @@ export async function authenticate(req, res, next) {
     next(error);
   }
 }
-

@@ -1,41 +1,41 @@
-import { supabase } from '../config/database.js';
-import { AppError } from '../utils/errors.js';
-import { getUserById, updateUserBalance } from './userService.js';
-import { getMarketById } from './marketService.js';
+import { supabase } from "../config/database.js";
+import { AppError } from "../utils/errors.js";
+import { getUserById, updateUserBalance } from "./userService.js";
+import { getMarketById } from "./marketService.js";
 
 /**
  * Place a bet on a market
  */
 export async function placeBet(userId, marketId, side, amount) {
   // Validate side
-  if (!['YES', 'NO'].includes(side)) {
-    throw new AppError('Side must be YES or NO', 400);
+  if (!["YES", "NO"].includes(side)) {
+    throw new AppError("Side must be YES or NO", 400);
   }
 
   // Validate amount
   if (amount <= 0) {
-    throw new AppError('Bet amount must be positive', 400);
+    throw new AppError("Bet amount must be positive", 400);
   }
 
   // Check user exists and has sufficient balance
   const user = await getUserById(userId);
   if (parseFloat(user.points_balance) < amount) {
-    throw new AppError('Insufficient balance', 400);
+    throw new AppError("Insufficient balance", 400);
   }
 
   // Check market exists and is open
   const market = await getMarketById(marketId);
-  if (market.status !== 'open') {
-    throw new AppError('Market is not open for betting', 400);
+  if (market.status !== "open") {
+    throw new AppError("Market is not open for betting", 400);
   }
 
   // Check if user already has a bet on this side
   const { data: existingBet } = await supabase
-    .from('bets')
-    .select('*')
-    .eq('user_id', userId)
-    .eq('market_id', marketId)
-    .eq('side', side)
+    .from("bets")
+    .select("*")
+    .eq("user_id", userId)
+    .eq("market_id", marketId)
+    .eq("side", side)
     .single();
 
   let betData;
@@ -43,11 +43,11 @@ export async function placeBet(userId, marketId, side, amount) {
   if (existingBet) {
     // Update existing bet (add to existing amount)
     const newAmount = parseFloat(existingBet.amount) + parseFloat(amount);
-    
+
     const { data, error } = await supabase
-      .from('bets')
+      .from("bets")
       .update({ amount: newAmount })
-      .eq('id', existingBet.id)
+      .eq("id", existingBet.id)
       .select()
       .single();
 
@@ -58,13 +58,15 @@ export async function placeBet(userId, marketId, side, amount) {
   } else {
     // Create new bet
     const { data, error } = await supabase
-      .from('bets')
-      .insert([{
-        user_id: userId,
-        market_id: marketId,
-        side: side,
-        amount: amount
-      }])
+      .from("bets")
+      .insert([
+        {
+          user_id: userId,
+          market_id: marketId,
+          side: side,
+          amount: amount,
+        },
+      ])
       .select()
       .single();
 
@@ -86,16 +88,18 @@ export async function placeBet(userId, marketId, side, amount) {
  */
 export async function getUserBets(userId, filters = {}) {
   let query = supabase
-    .from('bets')
-    .select(`
+    .from("bets")
+    .select(
+      `
       *,
       market:markets(*)
-    `)
-    .eq('user_id', userId)
-    .order('created_at', { ascending: false });
+    `
+    )
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false });
 
   if (filters.market_id) {
-    query = query.eq('market_id', filters.market_id);
+    query = query.eq("market_id", filters.market_id);
   }
 
   const { data, error } = await query;
@@ -112,13 +116,15 @@ export async function getUserBets(userId, filters = {}) {
  */
 export async function getMarketBets(marketId) {
   const { data, error } = await supabase
-    .from('bets')
-    .select(`
+    .from("bets")
+    .select(
+      `
       *,
       user:users(id, username, email)
-    `)
-    .eq('market_id', marketId)
-    .order('created_at', { ascending: false });
+    `
+    )
+    .eq("market_id", marketId)
+    .order("created_at", { ascending: false });
 
   if (error) {
     throw new AppError(`Database error: ${error.message}`, 500);
@@ -132,20 +138,20 @@ export async function getMarketBets(marketId) {
  */
 export async function getMarketPools(marketId) {
   const { data: yesBets, error: yesError } = await supabase
-    .from('bets')
-    .select('amount')
-    .eq('market_id', marketId)
-    .eq('side', 'YES');
+    .from("bets")
+    .select("amount")
+    .eq("market_id", marketId)
+    .eq("side", "YES");
 
   if (yesError) {
     throw new AppError(`Database error: ${yesError.message}`, 500);
   }
 
   const { data: noBets, error: noError } = await supabase
-    .from('bets')
-    .select('amount')
-    .eq('market_id', marketId)
-    .eq('side', 'NO');
+    .from("bets")
+    .select("amount")
+    .eq("market_id", marketId)
+    .eq("side", "NO");
 
   if (noError) {
     throw new AppError(`Database error: ${noError.message}`, 500);
@@ -157,7 +163,6 @@ export async function getMarketPools(marketId) {
   return {
     yes: yesPool,
     no: noPool,
-    total: yesPool + noPool
+    total: yesPool + noPool,
   };
 }
-

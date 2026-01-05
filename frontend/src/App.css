@@ -1,42 +1,756 @@
-#root {
-  max-width: 1280px;
+.app-container {
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #f8fafc 0%, #f1f5f9 100%);
+  padding-bottom: 40px;
+}
+
+/* Header Styles */
+header {
+  background: white;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 18px 24px;
+  margin-bottom: 32px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.header-content {
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
 }
 
 .logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+  font-size: 26px;
+  font-weight: 700;
+  color: #1e293b;
+  text-decoration: none;
+  letter-spacing: -0.5px;
 }
+
 .logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+  color: #3b82f6;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+nav {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+nav a {
+  color: #475569;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 15px;
+  transition: color 0.2s;
+}
+
+nav a:hover {
+  color: #3b82f6;
+}
+
+.user-info {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  font-size: 14px;
+}
+
+.balance {
+  color: #64748b;
+  font-weight: 500;
+}
+
+.balance strong {
+  color: #10b981;
+  font-weight: 600;
+}
+
+.logout-btn {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.logout-btn:hover {
+  background: #dc2626;
+}
+
+.login-form {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.login-input {
+  padding: 8px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 14px;
+  width: 200px;
+  background: white;
+}
+
+.login-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.login-btn {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.login-btn:hover {
+  background: #2563eb;
+}
+
+/* Main Content */
+.main-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Page Title */
+.page-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 24px;
+  letter-spacing: -0.5px;
+}
+
+/* Filter Buttons */
+.filter-buttons {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 10px 20px;
+  border: 1px solid #cbd5e1;
+  background: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #475569;
+  transition: all 0.2s;
+}
+
+.filter-btn:hover {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+
+.filter-btn.active {
+  background: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+  font-weight: 600;
+}
+
+/* Market Card */
+.markets-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.market-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 22px;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.market-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.market-card-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+.market-card-title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.market-card-title a:hover {
+  color: #3b82f6;
+}
+
+.market-card-description {
+  color: #64748b;
+  margin-bottom: 14px;
+  line-height: 1.6;
+  font-size: 15px;
+}
+
+.market-card-meta {
+  display: flex;
+  gap: 20px;
+  font-size: 13px;
+  color: #94a3b8;
+  flex-wrap: wrap;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-badge.open {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.status-badge.resolved {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.resolution-badge {
+  background: #fef3c7;
+  color: #92400e;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Back Button */
+.back-btn {
+  background: white;
+  border: 1px solid #cbd5e1;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #475569;
+  margin-bottom: 24px;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.back-btn:hover {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+
+/* Market Detail */
+.market-detail {
+  background: white;
+  border-radius: 12px;
+  padding: 32px;
+  margin-bottom: 32px;
+  border: 1px solid #e2e8f0;
+}
+
+.market-detail-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 16px;
+  line-height: 1.3;
+}
+
+.market-detail-description {
+  color: #64748b;
+  font-size: 16px;
+  margin-bottom: 24px;
+  line-height: 1.7;
+}
+
+.market-info {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 32px;
+  padding: 20px;
+  background: #f8fafc;
+  border-radius: 8px;
+  flex-wrap: wrap;
+}
+
+.info-item {
+  font-size: 14px;
+  color: #64748b;
+}
+
+/* Pools Section */
+.pools-section {
+  background: #f8fafc;
+  border-radius: 10px;
+  padding: 24px;
+  margin-bottom: 32px;
+}
+
+.pools-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #1e293b;
+}
+
+.pools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.pool-card {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.pool-label {
+  font-size: 14px;
+  color: #64748b;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.pool-amount {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 6px;
+}
+
+.pool-percentage {
+  font-size: 14px;
+  color: #10b981;
+  font-weight: 600;
+}
+
+/* Bet Form */
+.bet-section {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 28px;
+  margin-bottom: 32px;
+}
+
+.bet-section-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #1e293b;
+}
+
+.bet-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.side-options {
+  display: flex;
+  gap: 20px;
+}
+
+.side-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.side-option input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.side-option label {
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  color: #1e293b;
+}
+
+.amount-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.amount-input {
+  padding: 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 15px;
+  width: 100%;
+  max-width: 300px;
+  background: white;
+}
+
+.amount-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.balance-info {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.place-bet-btn {
+  background: #10b981;
+  color: white;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  transition: background 0.2s;
+  align-self: flex-start;
+}
+
+.place-bet-btn:hover:not(:disabled) {
+  background: #059669;
+}
+
+.place-bet-btn:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* Bets List */
+.bets-section {
+  background: white;
+  border-radius: 12px;
+  padding: 28px;
+  border: 1px solid #e2e8f0;
+}
+
+.bets-section-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #1e293b;
+}
+
+.bets-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.bet-item {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.bet-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.bet-user {
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.bet-side {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.bet-side.yes {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.bet-side.no {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.bet-amount {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.bet-date {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+/* Admin Dashboard */
+.admin-section {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 28px;
+  margin-bottom: 32px;
+}
+
+.admin-section-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: #1e293b;
+}
+
+.create-market-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-weight: 500;
+  color: #374151;
+  font-size: 14px;
+}
+
+.form-input {
+  padding: 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 15px;
+  background: white;
+  font-family: inherit;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.create-btn {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  transition: background 0.2s;
+  align-self: flex-start;
+}
+
+.create-btn:hover:not(:disabled) {
+  background: #2563eb;
+}
+
+.create-btn:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+.markets-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.admin-market-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 24px;
+}
+
+.admin-market-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #1e293b;
+}
+
+.admin-market-description {
+  color: #64748b;
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
+.admin-market-meta {
+  font-size: 13px;
+  color: #94a3b8;
+  margin-bottom: 20px;
+}
+
+.admin-market-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.resolve-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  transition: all 0.2s;
+}
+
+.resolve-btn.yes {
+  background: #10b981;
+  color: white;
+}
+
+.resolve-btn.yes:hover:not(:disabled) {
+  background: #059669;
+}
+
+.resolve-btn.no {
+  background: #ef4444;
+  color: white;
+}
+
+.resolve-btn.no:hover:not(:disabled) {
+  background: #dc2626;
+}
+
+.resolve-btn:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+.view-btn {
+  padding: 10px 20px;
+  border: 1px solid #cbd5e1;
+  background: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #475569;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.2s;
+}
+
+.view-btn:hover {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+
+/* Empty States */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #94a3b8;
+  font-size: 16px;
+}
+
+/* Loading */
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #64748b;
+  font-size: 16px;
+}
+
+/* Error */
+.error {
+  background: #fee2e2;
+  border: 1px solid #fca5a5;
+  color: #991b1b;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    align-items: flex-start;
   }
-  to {
-    transform: rotate(360deg);
+
+  nav {
+    width: 100%;
   }
-}
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+  .pools-grid {
+    grid-template-columns: 1fr;
   }
-}
 
-.card {
-  padding: 2em;
-}
+  .side-options {
+    flex-direction: column;
+  }
 
-.read-the-docs {
-  color: #888;
+  .admin-market-actions {
+    flex-direction: column;
+  }
+
+  .resolve-btn, .view-btn {
+    width: 100%;
+    text-align: center;
+  }
 }

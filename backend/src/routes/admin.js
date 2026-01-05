@@ -1,11 +1,11 @@
-import express from 'express';
-import { authenticate } from '../middleware/auth.js';
-import { requireAdmin } from '../middleware/admin.js';
+import express from "express";
+import { authenticate } from "../middleware/auth.js";
+import { requireAdmin } from "../middleware/admin.js";
 import {
   createMarketHandler,
   addPointsHandler,
-  resolveMarketHandler
-} from '../controllers/adminController.js';
+  resolveMarketHandler,
+} from "../controllers/adminController.js";
 
 const router = express.Router();
 
@@ -14,13 +14,12 @@ router.use(authenticate);
 router.use(requireAdmin);
 
 // Create a new market
-router.post('/markets', createMarketHandler);
+router.post("/markets", createMarketHandler);
 
 // Add points to a user
-router.post('/users/add-points', addPointsHandler);
+router.post("/users/add-points", addPointsHandler);
 
 // Resolve a market and distribute winnings
-router.post('/markets/:id/resolve', resolveMarketHandler);
+router.post("/markets/:id/resolve", resolveMarketHandler);
 
 export default router;
-
