@@ -80,7 +80,7 @@ function Header({ user, loading, onLogin, onLogout }) {
     <header>
       <div className="header-content">
         <Link to="/" className="logo">
-          Polymarket
+          Predict
         </Link>
         <nav>
           <Link to="/">Markets</Link>
