@@ -1,4 +1,4 @@
-import { placeBet } from '../services/betService.js';
+import { placeBet } from "../services/betService.js";
 
 export async function createBet(req, res, next) {
   try {
@@ -8,18 +8,17 @@ export async function createBet(req, res, next) {
     if (!market_id || !side || !amount) {
       return res.status(400).json({
         success: false,
-        error: 'Missing required fields: market_id, side, amount'
+        error: "Missing required fields: market_id, side, amount",
       });
     }
 
     const bet = await placeBet(userId, market_id, side, amount);
-    
+
     res.status(201).json({
       success: true,
-      data: bet
+      data: bet,
     });
   } catch (error) {
     next(error);
   }
 }
-

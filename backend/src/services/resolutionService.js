@@ -1,12 +1,12 @@
-import { supabase } from '../config/database.js';
-import { AppError } from '../utils/errors.js';
-import { resolveMarket } from './marketService.js';
-import { getMarketBets, getMarketPools } from './betService.js';
-import { updateUserBalance } from './userService.js';
+import { supabase } from "../config/database.js";
+import { AppError } from "../utils/errors.js";
+import { resolveMarket } from "./marketService.js";
+import { getMarketBets, getMarketPools } from "./betService.js";
+import { updateUserBalance } from "./userService.js";
 
 /**
  * Resolve a market and distribute winnings to winners
- * 
+ *
  * Resolution logic:
  * - The losing pool (all bets on the losing side) is distributed proportionally
  *   to winners based on their bet amounts
@@ -14,8 +14,8 @@ import { updateUserBalance } from './userService.js';
  * - Winners also get back their original bet amount
  */
 export async function resolveMarketAndDistribute(marketId, resolution) {
-  if (!['YES', 'NO'].includes(resolution)) {
-    throw new AppError('Resolution must be YES or NO', 400);
+  if (!["YES", "NO"].includes(resolution)) {
+    throw new AppError("Resolution must be YES or NO", 400);
   }
 
   // Resolve the market
@@ -23,12 +23,12 @@ export async function resolveMarketAndDistribute(marketId, resolution) {
 
   // Get all bets for this market
   const allBets = await getMarketBets(marketId);
-  
+
   // Get pool totals
   const pools = await getMarketPools(marketId);
 
   const winningSide = resolution;
-  const losingSide = resolution === 'YES' ? 'NO' : 'YES';
+  const losingSide = resolution === "YES" ? "NO" : "YES";
   const winningPool = pools[winningSide.toLowerCase()];
   const losingPool = pools[losingSide.toLowerCase()];
 
@@ -37,22 +37,23 @@ export async function resolveMarketAndDistribute(marketId, resolution) {
     return {
       market,
       distributed: false,
-      message: 'No winners to distribute to'
+      message: "No winners to distribute to",
     };
   }
 
   // If no losers, winners just get their bets back (nothing to distribute)
   if (losingPool === 0) {
     // Return original bets to winners
-    const winningBets = allBets.filter(bet => bet.side === winningSide);
+    const winningBets = allBets.filter((bet) => bet.side === winningSide);
     for (const bet of winningBets) {
       const currentBalance = await supabase
-        .from('users')
-        .select('points_balance')
-        .eq('id', bet.user_id)
+        .from("users")
+        .select("points_balance")
+        .eq("id", bet.user_id)
         .single();
 
-      const newBalance = parseFloat(currentBalance.data.points_balance) + parseFloat(bet.amount);
+      const newBalance =
+        parseFloat(currentBalance.data.points_balance) + parseFloat(bet.amount);
       await updateUserBalance(bet.user_id, newBalance);
     }
 
@@ -60,17 +61,17 @@ export async function resolveMarketAndDistribute(marketId, resolution) {
       market,
       distributed: true,
       totalDistributed: 0,
-      message: 'Winners received their bets back (no losing pool)'
+      message: "Winners received their bets back (no losing pool)",
     };
   }
 
   // Calculate and distribute winnings proportionally
-  const winningBets = allBets.filter(bet => bet.side === winningSide);
+  const winningBets = allBets.filter((bet) => bet.side === winningSide);
   let totalDistributed = 0;
 
   for (const bet of winningBets) {
     const betAmount = parseFloat(bet.amount);
-    
+
     // Calculate winnings: proportional share of losing pool + original bet
     const proportionalShare = (betAmount / winningPool) * losingPool;
     const totalWinnings = betAmount + proportionalShare;
@@ -78,9 +79,9 @@ export async function resolveMarketAndDistribute(marketId, resolution) {
 
     // Get current user balance
     const { data: userData } = await supabase
-      .from('users')
-      .select('points_balance')
-      .eq('id', bet.user_id)
+      .from("users")
+      .select("points_balance")
+      .eq("id", bet.user_id)
       .single();
 
     if (userData) {
@@ -95,7 +96,6 @@ export async function resolveMarketAndDistribute(marketId, resolution) {
     winningPool,
     losingPool,
     totalDistributed,
-    winnerCount: winningBets.length
+    winnerCount: winningBets.length,
   };
 }
-
