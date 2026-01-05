@@ -14,3 +14,5 @@ DROP POLICY IF EXISTS "Bets are publicly viewable" ON bets;
 DROP POLICY IF EXISTS "Allow bet creation" ON bets;
 
 
+
+
