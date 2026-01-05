@@ -4,6 +4,7 @@ import { getUserId, setUserId, usersApi } from './utils/api';
 import MarketList from './pages/MarketList';
 import MarketDetail from './pages/MarketDetail';
 import AdminDashboard from './pages/AdminDashboard';
+import './App.css';
 
 function App() {
   const [userId, setUserIdState] = useState(getUserId());
@@ -44,18 +45,20 @@ function App() {
 
   return (
     <BrowserRouter>
-      <div style={{ minHeight: '100vh', padding: '20px' }}>
+      <div className="app-container">
         <Header
           user={user}
           loading={loading}
           onLogin={handleLogin}
           onLogout={handleLogout}
         />
-        <Routes>
-          <Route path="/" element={<MarketList />} />
-          <Route path="/markets/:id" element={<MarketDetail user={user} onUpdate={loadUser} />} />
-          <Route path="/admin" element={<AdminDashboard user={user} onUpdate={loadUser} />} />
-        </Routes>
+        <div className="main-content">
+          <Routes>
+            <Route path="/" element={<MarketList />} />
+            <Route path="/markets/:id" element={<MarketDetail user={user} onUpdate={loadUser} />} />
+            <Route path="/admin" element={<AdminDashboard user={user} onUpdate={loadUser} />} />
+          </Routes>
+        </div>
       </div>
     </BrowserRouter>
   );
@@ -74,33 +77,31 @@ function Header({ user, loading, onLogin, onLogout }) {
   };
 
   return (
-    <header style={{ marginBottom: '30px', padding: '20px', borderBottom: '1px solid #ccc' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div>
-          <Link to="/" style={{ textDecoration: 'none', fontSize: '24px', fontWeight: 'bold' }}>
-            Polymarket
-          </Link>
-        </div>
-        <nav style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
+    <header>
+      <div className="header-content">
+        <Link to="/" className="logo">
+          Polymarket
+        </Link>
+        <nav>
           <Link to="/">Markets</Link>
           {user?.role === 'admin' && <Link to="/admin">Admin</Link>}
           {user ? (
-            <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-              <span>
-                {user.username} - Balance: {parseFloat(user.points_balance).toFixed(2)} points
-              </span>
-              <button onClick={onLogout}>Logout</button>
+            <div className="user-info">
+              <div className="balance">
+                {user.username} - Balance: <strong>{parseFloat(user.points_balance).toFixed(2)}</strong> points
+              </div>
+              <button onClick={onLogout} className="logout-btn">Logout</button>
             </div>
           ) : (
-            <form onSubmit={handleLoginSubmit} style={{ display: 'flex', gap: '10px' }}>
+            <form onSubmit={handleLoginSubmit} className="login-form">
               <input
                 type="text"
                 placeholder="Enter User ID"
                 value={loginId}
                 onChange={(e) => setLoginId(e.target.value)}
-                style={{ padding: '5px' }}
+                className="login-input"
               />
-              <button type="submit">Login</button>
+              <button type="submit" className="login-btn">Login</button>
             </form>
           )}
         </nav>

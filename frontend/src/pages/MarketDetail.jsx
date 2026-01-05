@@ -71,9 +71,9 @@ function MarketDetail({ user, onUpdate }) {
     }
   };
 
-  if (loading) return <div>Loading market...</div>;
-  if (error) return <div>Error: {error}</div>;
-  if (!market) return <div>Market not found</div>;
+  if (loading) return <div className="loading">Loading market...</div>;
+  if (error) return <div className="error">Error: {error}</div>;
+  if (!market) return <div className="error">Market not found</div>;
 
   const pools = market.pools || { yes: 0, no: 0, total: 0 };
   const yesPercentage = pools.total > 0 ? (pools.yes / pools.total) * 100 : 0;
@@ -81,62 +81,66 @@ function MarketDetail({ user, onUpdate }) {
 
   return (
     <div>
-      <button onClick={() => navigate('/')} style={{ marginBottom: '20px' }}>
-        ← Back to Markets
-      </button>
-      <h1>{market.title}</h1>
-      {market.description && <p>{market.description}</p>}
-      <div style={{ marginBottom: '20px' }}>
-        <div>Status: {market.status}</div>
-        {market.resolution && <div>Resolution: {market.resolution}</div>}
-        <div>Created: {new Date(market.created_at).toLocaleString()}</div>
-      </div>
+      <button onClick={() => navigate('/')} className="back-btn">← Back to Markets</button>
+      
+      <div className="market-detail">
+        <h1 className="market-detail-title">{market.title}</h1>
+        {market.description && <p className="market-detail-description">{market.description}</p>}
+        <div className="market-info">
+          <div className="info-item">Status: <strong>{market.status}</strong></div>
+          {market.resolution && <div className="info-item">Resolution: <strong>{market.resolution}</strong></div>}
+          <div className="info-item">Created: {new Date(market.created_at).toLocaleString()}</div>
+        </div>
 
-      <div style={{ marginBottom: '30px' }}>
-        <h2>Pools</h2>
-        <div style={{ display: 'flex', gap: '20px' }}>
-          <div style={{ flex: 1 }}>
-            <div>YES: {parseFloat(pools.yes).toFixed(2)} points</div>
-            <div>Percentage: {yesPercentage.toFixed(1)}%</div>
-          </div>
-          <div style={{ flex: 1 }}>
-            <div>NO: {parseFloat(pools.no).toFixed(2)} points</div>
-            <div>Percentage: {noPercentage.toFixed(1)}%</div>
-          </div>
-          <div style={{ flex: 1 }}>
-            <div>Total: {parseFloat(pools.total).toFixed(2)} points</div>
+        <div className="pools-section">
+          <h2 className="pools-title">Pools</h2>
+          <div className="pools-grid">
+            <div className="pool-card">
+              <div className="pool-label">YES</div>
+              <div className="pool-amount">{parseFloat(pools.yes).toFixed(2)} points</div>
+              <div className="pool-percentage">{yesPercentage.toFixed(1)}%</div>
+            </div>
+            <div className="pool-card">
+              <div className="pool-label">NO</div>
+              <div className="pool-amount">{parseFloat(pools.no).toFixed(2)} points</div>
+              <div className="pool-percentage">{noPercentage.toFixed(1)}%</div>
+            </div>
+            <div className="pool-card">
+              <div className="pool-label">Total</div>
+              <div className="pool-amount">{parseFloat(pools.total).toFixed(2)} points</div>
+            </div>
           </div>
         </div>
       </div>
 
       {market.status === 'open' && (
-        <div style={{ marginBottom: '30px', border: '1px solid #ccc', padding: '20px', borderRadius: '5px' }}>
-          <h2>Place a Bet</h2>
+        <div className="bet-section">
+          <h2 className="bet-section-title">Place a Bet</h2>
           {user ? (
-            <form onSubmit={handleBet}>
-              <div style={{ marginBottom: '15px' }}>
-                <label>
+            <form onSubmit={handleBet} className="bet-form">
+              <div className="side-options">
+                <div className="side-option">
                   <input
                     type="radio"
                     value="YES"
                     checked={betSide === 'YES'}
                     onChange={(e) => setBetSide(e.target.value)}
-                    style={{ marginRight: '5px' }}
+                    id="side-yes"
                   />
-                  YES
-                </label>
-                <label style={{ marginLeft: '15px' }}>
+                  <label htmlFor="side-yes">YES</label>
+                </div>
+                <div className="side-option">
                   <input
                     type="radio"
                     value="NO"
                     checked={betSide === 'NO'}
                     onChange={(e) => setBetSide(e.target.value)}
-                    style={{ marginRight: '5px' }}
+                    id="side-no"
                   />
-                  NO
-                </label>
+                  <label htmlFor="side-no">NO</label>
+                </div>
               </div>
-              <div style={{ marginBottom: '15px' }}>
+              <div className="amount-input-group">
                 <input
                   type="number"
                   placeholder="Amount"
@@ -145,45 +149,38 @@ function MarketDetail({ user, onUpdate }) {
                   min="0.01"
                   step="0.01"
                   required
-                  style={{ padding: '5px', width: '200px' }}
+                  className="amount-input"
                 />
-                <div style={{ fontSize: '12px', color: '#666', marginTop: '5px' }}>
+                <div className="balance-info">
                   Your balance: {parseFloat(user.points_balance).toFixed(2)} points
                 </div>
               </div>
-              <button type="submit" disabled={betting}>
+              <button type="submit" disabled={betting} className="place-bet-btn">
                 {betting ? 'Placing bet...' : 'Place Bet'}
               </button>
             </form>
           ) : (
-            <div>Please login to place a bet</div>
+            <div className="empty-state">Please login to place a bet</div>
           )}
         </div>
       )}
 
-      <div>
-        <h2>All Bets ({bets.length})</h2>
+      <div className="bets-section">
+        <h2 className="bets-section-title">All Bets ({bets.length})</h2>
         {bets.length === 0 ? (
-          <div>No bets yet</div>
+          <div className="empty-state">No bets yet</div>
         ) : (
-          <div>
+          <div className="bets-list">
             {bets.map((bet) => (
-              <div
-                key={bet.id}
-                style={{
-                  border: '1px solid #ccc',
-                  padding: '10px',
-                  marginBottom: '10px',
-                  borderRadius: '5px',
-                }}
-              >
-                <div>
-                  <strong>{bet.user?.username || bet.user_id}</strong> bet{' '}
-                  <strong>{bet.side}</strong> - {parseFloat(bet.amount).toFixed(2)} points
+              <div key={bet.id} className="bet-item">
+                <div className="bet-item-header">
+                  <div>
+                    <span className="bet-user">{bet.user?.username || bet.user_id}</span>
+                    <span className={`bet-side ${bet.side.toLowerCase()}`}>{bet.side}</span>
+                  </div>
+                  <div className="bet-amount">{parseFloat(bet.amount).toFixed(2)} points</div>
                 </div>
-                <div style={{ fontSize: '12px', color: '#666' }}>
-                  {new Date(bet.created_at).toLocaleString()}
-                </div>
+                <div className="bet-date">{new Date(bet.created_at).toLocaleString()}</div>
               </div>
             ))}
           </div>
@@ -194,4 +191,3 @@ function MarketDetail({ user, onUpdate }) {
 }
 
 export default MarketDetail;
-
