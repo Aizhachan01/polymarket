@@ -32,5 +32,9 @@ frontend/.vite/
 backend/node_modules/
 backend/.env
 
+ARCHITECTURE.md
+DEPLOY.md
+SUPABASE_RLS_SETUP.md
+
 
 

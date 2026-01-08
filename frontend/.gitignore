@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+CARD_COMPONENT_README.md
+README_VERCEL.md

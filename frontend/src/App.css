@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 .app-container {
   min-height: 100vh;
   background: linear-gradient(to bottom, #f8fafc 0%, #f1f5f9 100%);
@@ -325,7 +327,8 @@ nav a:hover {
   flex-wrap: wrap;
 }
 
-.info-item {
+/* Info items - used in market-info context */
+.market-info .info-item {
   font-size: 14px;
   color: #64748b;
 }
@@ -544,11 +547,6 @@ nav a:hover {
   font-size: 16px;
   font-weight: 600;
   color: #1e293b;
-}
-
-.bet-date {
-  font-size: 12px;
-  color: #94a3b8;
 }
 
 /* Admin Dashboard */
@@ -851,14 +849,15 @@ nav a:hover {
   gap: 16px;
 }
 
-.info-item {
+/* Info items - used in profile-info context */
+.profile-info .info-item {
   display: flex;
   gap: 12px;
   align-items: center;
   font-size: 15px;
 }
 
-.info-item .label {
+.profile-info .info-item .label {
   font-weight: 600;
   color: #64748b;
   min-width: 80px;
@@ -931,13 +930,7 @@ nav a:hover {
   font-weight: 500;
 }
 
-.bets-section {
-  background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 32px;
-}
-
+/* Profile bets section - uses h2 instead of title class */
 .bets-section h2 {
   font-size: 20px;
   font-weight: 600;
@@ -945,10 +938,8 @@ nav a:hover {
   margin-bottom: 24px;
 }
 
-.bet-item {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
+/* Bet item in profile context - has more padding and margin */
+.profile-container .bet-item {
   padding: 20px;
   margin-bottom: 16px;
 }
@@ -997,6 +988,7 @@ nav a:hover {
   font-weight: 600;
 }
 
+/* Bet date - shared across contexts */
 .bet-date {
   font-size: 12px;
   color: #94a3b8;
@@ -1025,7 +1017,8 @@ nav a:hover {
     flex-direction: column;
   }
 
-  .resolve-btn, .view-btn {
+  .resolve-btn,
+  .view-btn {
     width: 100%;
     text-align: center;
   }
