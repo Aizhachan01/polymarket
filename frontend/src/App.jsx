@@ -112,6 +112,17 @@ function Header({ user, loading, onLogin, onLogout }) {
                 <div className="text-sm text-gray-600">
                   Balance: <span className="font-semibold text-green-600">{parseFloat(user.points_balance).toFixed(2)}</span> points
                 </div>
+                <div className="top-up">
+  <a
+    href="https://t.me/predictyourmarket_bot"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="px-3 py-1 rounded-lg bg-blue-600 text-white text-sm hover:bg-blue-700 transition"
+  >
+    Top Up via Telegram
+  </a>
+</div>
+
                 <button 
                   onClick={onLogout} 
                   className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors text-sm font-medium"
